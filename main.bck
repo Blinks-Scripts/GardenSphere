@@ -1,9 +1,0 @@
-#include "gameclass.h"
-
-int main() {
-    
-    GAME mygame = GAME();
-    mygame.run();
-
-    return 0;
-}
