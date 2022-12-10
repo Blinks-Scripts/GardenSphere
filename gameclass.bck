@@ -1,0 +1,61 @@
+#ifndef GAMECLASS_H
+#define GAMECLASS_H
+
+#include "playerclass.h"
+#include <cstdlib>
+#include <iostream>
+#include <string>
+#include <ncurses.h>
+
+class GAME {
+    public:
+        PLAYER* player;
+
+
+        GAME();
+        //GAME( int file_descriptor );
+        ~GAME();
+
+        int run();
+    
+};
+
+GAME::GAME() {
+    player = new PLAYER();
+    player->pos = std::pair<int,int>(10,10);
+    std::cout << "Enter a player name: " << std::endl;
+    std::string pl_name;
+    std::cin >> pl_name;
+    player->ch_name( pl_name );
+
+    initscr();
+    raw();
+    keypad(stdscr, TRUE);
+    noecho();
+};
+
+int GAME::run() {
+    int ch = 'r';
+
+    while ( ch != 'q' ) {
+        switch ( ch ) {
+            case KEY_UP: player->pos.first -= 1; break;
+            case KEY_DOWN: player->pos.first += 1; break;
+            case KEY_LEFT: player->pos.second -= 1; break;
+            case KEY_RIGHT: player->pos.second += 1; break;
+            default: break;
+        };
+        erase();
+        move(player->pos.first, player->pos.second);
+        addch(player->pl_symbol);
+        refresh();
+
+        ch = getch();
+    }
+
+    endwin();
+
+    return 1;
+}
+
+#endif
