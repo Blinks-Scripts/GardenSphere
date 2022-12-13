@@ -33,7 +33,7 @@ class GAME {
 
 GAME::GAME() {
     player = new PLAYER();
-    player->pos = std::pair<int,int>(10,10);
+    player->pos = std::pair<int,int>(10,20);
     std::cout << "Enter a player name: " << std::endl;
     std::string pl_name;
     std::cin >> pl_name;
@@ -66,11 +66,12 @@ int GAME::run() {
         // draw player
         move(player->pos.first, player->pos.second);
         addch(player->pl_symbol);
+        player->draw_hud();
         addch(' ');
-        addstr( player->get_step_str() );
+        //addstr( player->get_step_str() );
 
         // draw clock
-        mvaddstr( 2, 40, (std::to_string( g_clock->game_time )).c_str() );
+        mvaddstr( 2, 70, (std::to_string( g_clock->game_time )).c_str() );
         
         halfdelay(5);
         g_clock->update();

@@ -8,8 +8,6 @@
 #include <fstream>
 #include "building.h"
 #include "jfxlib.h"
-#include "collisions.h"
-#include "item.h"
 
 
 class LOCATION {
@@ -17,16 +15,14 @@ class LOCATION {
         std::string filename; // name of file containing specifications of a LOCATION tile
         //std::vector<std::vector<int>> collision_map;
         std::vector<BUILDING*> bldngs; // vector of the buildings for this LOCATION
-        
-        std::map<std::pair<int,int>, COLLISIONS*> collisions;
-		
+
+
 
         LOCATION(); // Default Constructor, constructs home tile
         LOCATION( std::string, JFXLIB* ); // Construct the location given using the given library
         ~LOCATION(); // Destructor
-        void add_bldng_collisions( BUILDING* );
+        //void add_collision( int y, int x, int yHeight, int xWidth );
         void draw_self(); // Using the ncurses, draw this LOCATION's graphics to screen
-        void add_item_collision( std::pair<int,int>, ITEM* );
 };
 
 /*
@@ -69,9 +65,6 @@ LOCATION::LOCATION()
                 BUILDING* n_bld = new BUILDING( temp_filestr, each_copy.first, each_copy.second );
                 std::cout << "n_bld y = " << n_bld->position.first << std::endl;
                 std::cout << "b_bld x = " << n_bld->position.second << std::endl;
-                
-                add_bldng_collisions( n_bld );
-                
                 bldngs.push_back(n_bld);
             }
         }
@@ -140,9 +133,6 @@ LOCATION::LOCATION( std::string tile_file, JFXLIB* lib )
                 BUILDING* n_bld = new BUILDING( temp_filestr, each_copy.first, each_copy.second );
                 std::cout << "n_bld y = " << n_bld->position.first << std::endl;
                 std::cout << "b_bld x = " << n_bld->position.second << std::endl;
-                
-                add_bldng_collisions( n_bld );
-                
                 bldngs.push_back(n_bld);
             }
         }
@@ -163,60 +153,17 @@ LOCATION::~LOCATION() {
 }
         
 /**
- * instantiate COLLISIONS for all the walls of the
- * buiilding using default COLLISION
- ************************************/
- void LOCATION::add_bldng_collisions( BUILDING* b )
- {
-	 int y = b->position.first;
-	 int x = b->position.second;
-	 
-	 std::pair<std::pair<int,int>,std::pair<int,int>> col_b; // collision box temp 
-	 
-	 for ( auto each_b : b->collision_boxes ) {
-	 	 
-		 for ( int i = each_b.first.first ; i < each_b.first.first + each_b.second.first; i++ ) {
-			 for ( int k = each_b.first.second; k < each_b.first.second + each_b.second.second; k++ ) {
-				 std::pair<int,int> temp_pair = std::make_pair( (y+i), (x+k) );
-				 collisions[temp_pair] = new COLLISIONS();
-			 }
-		 }
-	 }
- }
- 
- /**
-  * instantiate a COLLISION if needed and add an
-  * item to the COLLISION object's item vector
-  *******/
-  void LOCATION::add_item_collision( std::pair<int,int> pos, ITEM* itm )
-  {
-	  if( collisions[pos] == nullptr ) {
-		  collisions[pos] = new COLLISIONS( itm );
-	  } else if ( itm->itm_symbol != ' ' ) {
-		  if ( itm->impasse ) collisions[pos]->impasse_bool=true;
-	      collisions[pos]->items.push_back( itm );
-	  }
-	  
-  }
-        
-/**
  * draw this LOCATION to the stdscr
  **/
 void LOCATION::draw_self()
 {
-	/*
+    /*
      * tell each building in this location
      * to draw itself
      * */
     for ( auto b : bldngs ) {
         b->draw_self();
     }
-    for ( auto i : collisions ) {
-		if ( i.second->collisions.empty() && ! i.second->items.empty() ) {
-			mvaddch( i.first.first, i.first.second, i.second->items.front()->itm_symbol );
-		}
-	}
-
 }
 
 

@@ -4,7 +4,7 @@
 #include <cstdlib>
 #include <vector>
 #include <string>
-#include <jfxlib.h>
+#include "jfxlib.h"
 #include "location.h"
 
 class WORLD_MAP {
@@ -20,8 +20,7 @@ class WORLD_MAP {
          * the information to construct the tile )
          * 
          * */
-        std::vector<std::vector<std::string>> tile_array = { { "home.tile" }, { "away.tile" } };
-
+        std::vector<std::vector<std::string>> tile_array = { { "away.tile", "home.tile", "away.tile" }, { "home.tile", "away.tile", "home.tile" }, { "away.tile", "home.tile", "away.tile" } };
 		/*
 		 * The WORLD_MAP reference container!
 		 * Each LOCATION object pointer stored with

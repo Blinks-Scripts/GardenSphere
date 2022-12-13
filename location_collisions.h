@@ -9,7 +9,6 @@
 #include "building.h"
 #include "jfxlib.h"
 #include "collisions.h"
-#include "item.h"
 
 
 class LOCATION {
@@ -18,7 +17,7 @@ class LOCATION {
         //std::vector<std::vector<int>> collision_map;
         std::vector<BUILDING*> bldngs; // vector of the buildings for this LOCATION
         
-        std::map<std::pair<int,int>, COLLISIONS*> collisions;
+        std::map<std::pair<int,int>, COLLISION*> collisions;
 		
 
         LOCATION(); // Default Constructor, constructs home tile
@@ -26,7 +25,7 @@ class LOCATION {
         ~LOCATION(); // Destructor
         void add_bldng_collisions( BUILDING* );
         void draw_self(); // Using the ncurses, draw this LOCATION's graphics to screen
-        void add_item_collision( std::pair<int,int>, ITEM* );
+        void add_item_collision( std::pair<int,int>, char );
 };
 
 /*
@@ -166,20 +165,13 @@ LOCATION::~LOCATION() {
  * instantiate COLLISIONS for all the walls of the
  * buiilding using default COLLISION
  ************************************/
- void LOCATION::add_bldng_collisions( BUILDING* b )
+ void add_bldng_collisions( BUILDING* b )
  {
 	 int y = b->position.first;
 	 int x = b->position.second;
-	 
-	 std::pair<std::pair<int,int>,std::pair<int,int>> col_b; // collision box temp 
-	 
-	 for ( auto each_b : b->collision_boxes ) {
-	 	 
-		 for ( int i = each_b.first.first ; i < each_b.first.first + each_b.second.first; i++ ) {
-			 for ( int k = each_b.first.second; k < each_b.first.second + each_b.second.second; k++ ) {
-				 std::pair<int,int> temp_pair = std::make_pair( (y+i), (x+k) );
-				 collisions[temp_pair] = new COLLISIONS();
-			 }
+	 for ( int i = 0; i < b->height; i++ ) {
+		 for ( int k = 0; < k < b->width; k++ ) {
+			 collisions[std::make_pair( y+i, x+k )] = new COLLISION();
 		 }
 	 }
  }
@@ -188,15 +180,13 @@ LOCATION::~LOCATION() {
   * instantiate a COLLISION if needed and add an
   * item to the COLLISION object's item vector
   *******/
-  void LOCATION::add_item_collision( std::pair<int,int> pos, ITEM* itm )
+  void LOCATION::add_item_collision( std::pair<int,int> pos, char itm )
   {
 	  if( collisions[pos] == nullptr ) {
 		  collisions[pos] = new COLLISIONS( itm );
-	  } else if ( itm->itm_symbol != ' ' ) {
-		  if ( itm->impasse ) collisions[pos]->impasse_bool=true;
+	  } else {
 	      collisions[pos]->items.push_back( itm );
 	  }
-	  
   }
         
 /**
@@ -204,7 +194,7 @@ LOCATION::~LOCATION() {
  **/
 void LOCATION::draw_self()
 {
-	/*
+    /*
      * tell each building in this location
      * to draw itself
      * */
@@ -212,11 +202,10 @@ void LOCATION::draw_self()
         b->draw_self();
     }
     for ( auto i : collisions ) {
-		if ( i.second->collisions.empty() && ! i.second->items.empty() ) {
-			mvaddch( i.first.first, i.first.second, i.second->items.front()->itm_symbol );
+		if ( ! i.second->items.empty() ) {
+			mvaddch( i.first.first, i.first.second, i.second->items.front() );
 		}
 	}
-
 }
 
 
