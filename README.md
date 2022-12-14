@@ -35,12 +35,35 @@ Items/Inventory prototype added
 - Player can place selected item on the ground with the 'p' key    
 - Player can pick up object beneath them with the 'g' key    
 - Player can create am impassable !fence char with the 'o' key    
-***bugs: depleted items still appear in inventory, placing a depleted item crashes game    
+- **bugs**: depleted items still appear in inventory, placing a depleted item crashes game - *resolved*
           
 Next Up:    
-         Player direction    
-         Fix inventory bugs    
+         ~Player direction ~  
+         ~Fix inventory bugs ~   
          
+12/13/22
+
+Updates:
+	Player Direction implemented; now represented by a carot showing player direction
+	Inventory no longer crashes when empty;
+	Depleted inventory items no longer display in the inventory
+	
+**Next up**:
+	Loose Ends:
+		Find candidates for encapsulation (player move methods can be consoldiated for example)
+		Give classes proper accessor and mutator methods
+		Improve .jfx file-structure - needs to be more intuitive - may need layers
+		--> Down the road: make .jfx into animated ASCII sprites
+		Begin implementing colors before it's too late. Visual design not necessary, but make sure everything knows how to have a color
+		Items may need children classes for different item types
+		
+		Make a list of all code items to fix/ address before proceeding
+		Create preliminary documentation
+		
+	**Down the road** :
+		SCENARIOS: will include objectives and NPC routines
+		-- Collisions need to be expanded to accomodate players, waypoints, objectives, etc
+		Entering buildings
 
 
 
