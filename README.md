@@ -35,6 +35,7 @@ Items/Inventory prototype added
 - Player can place selected item on the ground with the 'p' key    
 - Player can pick up object beneath them with the 'g' key    
 - Player can create am impassable !fence char with the 'o' key    
+
 - **bugs**: depleted items still appear in inventory, placing a depleted item crashes game - *resolved*
           
 Next Up:    
