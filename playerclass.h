@@ -155,6 +155,7 @@ void PLAYER::move_up()
     } 
 
     incr_step();
+    pl_symbol = '^';
 }
 
 void PLAYER::move_down()
@@ -174,6 +175,7 @@ void PLAYER::move_down()
     } // else if ( collision( (player.pos.first - 1), (player.pos.second) )
 
     incr_step();
+    pl_symbol = 'v';
 }
 
 void PLAYER::move_left()
@@ -193,6 +195,7 @@ void PLAYER::move_left()
     } // else if ( collision( (player.pos.first - 1), (player.pos.second) )
 
     incr_step();
+    pl_symbol = '<';
 }
 
 void PLAYER::move_right()
@@ -212,6 +215,7 @@ void PLAYER::move_right()
     } // else if ( collision( (player.pos.first - 1), (player.pos.second) )
 
     incr_step();
+    pl_symbol = '>';
 }
 
 /**
@@ -231,17 +235,23 @@ void PLAYER::place_item( std::pair<int,int> coords, ITEM* itm )
 
 void PLAYER::place_item( std::pair<int,int> coords, std::deque<ITEM*>& itm_deq )
 {
+	// initial empty()-catch is intended to be the deque at key: "empty inventory"
+	// should always be empty
+	if ( itm_deq.empty() ) return; // only executes (or skips the method, more appropriately) if inventory is empty
 	ITEM* itm = itm_deq.front();
 	itm_deq.pop_front();
 	// if deque is empty, inc selection
 	location->add_item_collision( coords, itm );
+	if ( itm_deq.empty() ) itm_sel = inc_selection();
 }
 
 void PLAYER::grab_item( std::pair<int,int>, std::deque<ITEM*>& item_pile ) {
 	if ( item_pile.size() > 0 ) {
 		inventory[item_pile.front()->item_name].push_back(item_pile.front());
+		if ( itm_sel == "empty inventory" ) itm_sel = item_pile.front()->item_name;
 		item_pile.pop_front();
 	}
+	
 }
 
 /**
@@ -281,15 +291,18 @@ std::string PLAYER::inc_selection()
 	bool flag = false;
 	while ( ! inventory.empty() ) {
 		for ( auto i = inventory.begin(); i != inventory.end(); ++i ) {
-			if ( flag ) return (i->first);
-			if (i->first == itm_sel) flag = true;
+			if ( flag && ((int)(i->second.size()) > 0 )) return (i->first);
+			if (i->first == itm_sel) {
+				if ( flag ) return "empty inventory";
+				flag = true;
+			}
 			if ( (i == inventory.end()) && !(inventory.empty()) ) { 
 				i = inventory.begin();
 			}
 		}
 	}
 	
-	return "error incsel";
+	return "empty inventory";
 }
 
 /**
@@ -337,10 +350,13 @@ void PLAYER::draw_hud()
 	
 	//draw inventory
 	for ( auto i : inventory ) {
+		// if the item count is 0, do not list the item in inventory
+		// the key is still in the map even if item count is 0 so we need to check item count
+		if ( (int)(i.second.size()) == 0 ) continue; // skip the item and don't increase temp
 		mvaddstr( hudy+temp+1, hudx+2, i.first.c_str() );
 		mvaddstr( hudy+temp+1, hudx+hudw-5, std::to_string(i.second.size()).c_str() );
 		if ( i.first == itm_sel ) addstr("--");
-		temp++;
+		temp++; 
 	}
 }
 
