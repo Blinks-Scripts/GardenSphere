@@ -7,7 +7,7 @@
 class GAMECLOCK {
 
     public:
-        double game_time;
+        int game_time;
         time_t start_time;
 
         GAMECLOCK();

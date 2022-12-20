@@ -48,6 +48,7 @@ GAME::GAME() {
     raw();
     keypad(stdscr, TRUE);
     noecho();
+    curs_set(0);
 };
 
 void GAME::draw_board( LOCATION* loc )
