@@ -2,6 +2,7 @@
 #define ITEM_H
 
 #include <string>
+#include "timer.h"
 
 class ITEM {
 
@@ -9,7 +10,7 @@ class ITEM {
 	char itm_symbol;
 	std::string item_name;
 	bool impasse = false;
-	// personal clock reference to know age? certain items maybe: future implementation
+	TIMER* timer = new TIMER();
 	
 	ITEM();
 	ITEM( std::string, bool );

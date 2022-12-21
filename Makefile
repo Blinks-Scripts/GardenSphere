@@ -2,8 +2,8 @@ CXXFLAGS+=-std=c++11 -Wall -Wextra -Werror -pedantic -I.
 
 all: gardengame
 
-gardengame: main.cxx building.h clock.h gameclass.h jfxlib.h location.h playerclass.h worldmap.h collisions.h item.h
-	g++ $(CXXFLAGS) -o gardengame main.cxx building.h clock.h gameclass.h jfxlib.h location.h playerclass.h worldmap.h collisions.h item.h -lncurses
+gardengame: main.cxx timer.h gameclass.h constants.h location.h playerclass.h position.h building.h worldmap.h collisions.h jfxlib.h
+	g++ $(CXXFLAGS) -o gardengame main.cxx timer.h gameclass.h constants.h location.h playerclass.h position.h building.h worldmap.h collisions.h jfxlib.h -lncurses
 
 clean:
 	rm -f *.o

@@ -5,6 +5,7 @@
 #include <string>
 #include <fstream>
 #include <map>
+#include <iostream>
 
 class JFXLIB {
 
@@ -26,7 +27,7 @@ class JFXLIB {
  ***/
 JFXLIB::JFXLIB() {
 
-    std::ifstream lib_file( "jfxlib.defs" );
+    std::ifstream lib_file( "jfxlibdefs.h" );
     while ( lib_file.is_open() ) {
 
         while ( lib_file.peek() != EOF ) {
@@ -48,6 +49,7 @@ JFXLIB::JFXLIB() {
  ***/
 std::string JFXLIB::lookup( std::string key ) 
 {
+	std::cout << "looking up: " << key << "\n";
     return table[key];
 }
 

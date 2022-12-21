@@ -1,4 +1,6 @@
+#include <cstdlib>
 #include "gameclass.h"
+
 
 int main() {
     

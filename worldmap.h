@@ -9,7 +9,8 @@
 
 class WORLD_MAP {
     public:
-
+        WORLD_MAP(); // Constructor
+        ~WORLD_MAP(); // Destructor
         JFXLIB* graphics_lib = new JFXLIB(); // default constructor uses default graphics library
         
         /*
@@ -20,7 +21,7 @@ class WORLD_MAP {
          * the information to construct the tile )
          * 
          * */
-        std::vector<std::vector<std::string>> tile_array = { { "away.tile", "home.tile", "away.tile" }, { "home.tile", "away.tile", "home.tile" }, { "away.tile", "home.tile", "away.tile" } };
+        std::vector<std::vector<std::string>> tile_array = { { "home.tile", "away.tile"} , { "away.tile", "home.tile" } };
 		/*
 		 * The WORLD_MAP reference container!
 		 * Each LOCATION object pointer stored with
@@ -28,9 +29,6 @@ class WORLD_MAP {
 		 **/
         std::map<std::pair<int,int>, LOCATION* > tile_table;
 
-        WORLD_MAP(); // Constructor
-        ~WORLD_MAP(); // Destructor
-        
         // Accessors
         LOCATION* get_location( std::pair<int,int> );
 };
@@ -43,16 +41,19 @@ class WORLD_MAP {
  * and array representing the "map of the game"
  * **/
 WORLD_MAP::WORLD_MAP() {
-    int ttY = 0;
-    int ttX = 0;
-    for ( ttY = 0 ; ttY < int(tile_array.size()) ; ttY++ )
+	std::cout << "world map constructor \n";
+    int world_tile_y = 0;
+    int world_tile_x = 0;
+    int world_height = int(tile_array.size());
+    int world_width = int(tile_array[world_tile_y].size());
+    
+    for ( world_tile_y = 0 ; world_tile_y < world_height; world_tile_y++ )
     {
-        for ( ttX = 0; ttX < int(tile_array[ttY].size()); ttX++ ) {
-            
-            LOCATION* n_loc = new LOCATION( tile_array[ttY][ttX], graphics_lib );
-            tile_table[(std::make_pair(ttY,ttX))] = n_loc;
+        for ( world_tile_x = 0; world_tile_x < world_width; world_tile_x++ ) {
+            LOCATION* n_loc = new LOCATION( tile_array[world_tile_y][world_tile_x], graphics_lib );
+            tile_table[(std::make_pair(world_tile_y,world_tile_x))] = n_loc;
         }
-
+		world_width = int(tile_array[world_tile_y].size());
     }
 }
 
